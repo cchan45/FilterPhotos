@@ -20,4 +20,5 @@ const IOhandler = require("./IOhandler"),
               IOhandler.grayScale(`${pathUnzipped}/${file}`, `${pathProcessed}/${file}`)
           })
       })
+      .then(() => console.log("Program Done"))
       .catch((err) => console.log(err))
