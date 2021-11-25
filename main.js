@@ -3,8 +3,8 @@
  * File Name: main.js
  * Description:
  *
- * Created Date:
- * Author:
+ * Created Date: Nov 24, 2021
+ * Author: Chris Chan
  *
  */
 
