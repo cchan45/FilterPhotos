@@ -57,34 +57,37 @@ const readDir = (dir) => {
  *
  * @param {string} filePath
  * @param {string} pathProcessed
+ * @param {string} unzipped
  * @return {promise}
  */
-const grayScale = (pathIn, pathOut, file) => {
+const grayScale = (pathIn, pathOut, unzipped) => {
   return new Promise((resolve, reject) => {
-    fs.createReadStream(pathIn)
-        .pipe(
-            new PNG()
-        )
-        .on("parsed", function () {
-          for (var y = 0; y < this.height; y++) {
-            for (var x = 0; x < this.width; x++) {
-              var idx = (this.width * y + x) << 2;
-              //addes all the pixels and divides it by 3
-              let grey = parseInt((this.data[idx] + this.data[idx+1] + this.data[idx +2]) /3)
+    unzipped.forEach(file => {
+      fs.createReadStream(`${pathIn}/${file}`)
+          .pipe(
+              new PNG()
+          )
+          .on("parsed", function () {
+            for (var y = 0; y < this.height; y++) {
+              for (var x = 0; x < this.width; x++) {
+                var idx = (this.width * y + x) << 2;
+                //addes all the pixels and divides it by 3
+                let grey = parseInt((this.data[idx] + this.data[idx+1] + this.data[idx +2]) /3)
 
-              //giving the picture a grey filter
-              this.data[idx] = grey
-              this.data[idx + 1] = grey
-              this.data[idx + 2] = grey
+                //giving the picture a grey filter
+                this.data[idx] = grey
+                this.data[idx + 1] = grey
+                this.data[idx + 2] = grey
+              }
             }
-          }
-          this.pack().pipe(fs.createWriteStream(pathOut))
-          resolve()
-        })
-        .on("error", (error) => {
-          reject(error)
-        })
-  })
+            this.pack().pipe(fs.createWriteStream(`${pathOut}/${file}`))
+            resolve()
+          })
+          .on("error", (error) => {
+            reject(error)
+          })
+      })
+    })
 };
 
 module.exports = {
